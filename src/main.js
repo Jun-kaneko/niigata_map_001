@@ -23,6 +23,7 @@ const state = {
   includeCond: true,
 };
 const layerById = Object.fromEntries(LAYERS.map((l) => [l.id, l]));
+const DIM_LAYER = 'pt-shelter-dim';
 const byId = {}; // feature id -> { layerId, feature }
 
 function el(tag, props = {}, ...children) {
@@ -149,16 +150,29 @@ function addPointLayers(collections) {
       },
     });
   });
+  // 絞り込みで外れた避難場所は、消さずに薄いグレーの小さなアイコンで残す
+  map.addLayer({
+    id: DIM_LAYER, type: 'symbol', source: 'pt-shelter',
+    layout: {
+      'icon-image': 'icon-shelter-dim',
+      'icon-size': ['interpolate', ['linear'], ['zoom'], 10, 0.22, 13, 0.36, 16, 0.5],
+      'icon-allow-overlap': true,
+      visibility: 'none',
+    },
+    paint: { 'icon-opacity': 0.55 },
+  }, 'pt-shelter');
 }
 
 function applyFilterToMap() {
   if (!state.mapReady) return;
   if (filterActive()) {
-    const ids = shelterMatches().map((f) => f.properties.id);
-    map.setFilter('pt-shelter', ['in', ['get', 'id'], ['literal', ids]]);
+    const ids = ['literal', shelterMatches().map((f) => f.properties.id)];
+    map.setFilter('pt-shelter', ['in', ['get', 'id'], ids]);
+    map.setFilter(DIM_LAYER, ['!', ['in', ['get', 'id'], ids]]);
   } else {
     map.setFilter('pt-shelter', null);
   }
+  map.setLayoutProperty(DIM_LAYER, 'visibility', filterActive() && state.visible.shelter ? 'visible' : 'none');
   // 災害種別の情報がない「(A)未収録」は、絞り込み中は表示しない
   const unlistedOn = state.visible.unlisted && !filterActive();
   map.setLayoutProperty('pt-unlisted', 'visibility', unlistedOn ? 'visible' : 'none');
@@ -166,7 +180,10 @@ function applyFilterToMap() {
 
 function setLayerVisible(id, on) {
   state.visible[id] = on;
-  if (id === 'unlisted') applyFilterToMap();
+  if (id === 'unlisted' || id === 'shelter') {
+    if (state.mapReady) map.setLayoutProperty('pt-shelter', 'visibility', state.visible.shelter ? 'visible' : 'none');
+    applyFilterToMap();
+  }
   else if (state.mapReady) map.setLayoutProperty(`pt-${id}`, 'visibility', on ? 'visible' : 'none');
   renderNearby();
 }
@@ -271,7 +288,7 @@ function focusFeature(layerId, feature) {
 }
 
 function bindMapClicks() {
-  const ids = LAYERS.map((l) => `pt-${l.id}`);
+  const ids = [...LAYERS.map((l) => `pt-${l.id}`), DIM_LAYER];
   map.on('click', (e) => {
     const hits = map.queryRenderedFeatures(
       [[e.point.x - 10, e.point.y - 10], [e.point.x + 10, e.point.y + 10]], { layers: ids });
@@ -410,7 +427,7 @@ function onFilterChanged() {
     const extra = state.features.unlisted.length;
     summary.textContent = n === 0
       ? '条件に合う避難場所がデータにありません。災害の種類や条件を変えてみてください。'
-      : `「${selectedLabel()}」に対応する表記のある避難場所: ${n} 件（全 ${total} 件中）。`
+      : `「${selectedLabel()}」に対応する表記のある避難場所: ${n} 件（全 ${total} 件中）。外れたものは薄いグレーで表示。`
         + `「(A)未収録」${extra} 件は情報がないため非表示です。`;
   }
   renderNearby();
@@ -565,6 +582,7 @@ function buildHowto() {
     el('h3', {}, '絞り込みの使い方'),
     el('ul', {},
       el('li', {}, '複数の災害を選ぶと、既定は「選んだすべてに対応」の表記がある避難場所だけを表示します。「いずれかに対応」に切り替えられます。'),
+      el('li', {}, '絞り込みから外れた避難場所は、消さずに薄いグレーの小さなアイコンで残します（タップすると内容を確認できます）。'),
       el('li', {}, '「階数などの条件つきも含める」を外すと、「対応あり」（○）だけに絞ります。'),
       el('li', {}, '「(A)未収録」は、屋内避難所・屋外避難場所のデータにあり、指定緊急避難場所一覧に見当たらない施設です'
         + `（${s.unlisted?.okunai?.notInShelter ?? '?'}件＋${s.unlisted?.okugai?.notInShelter ?? '?'}件）。災害種別の情報がないため、絞り込み中は表示しません。`),
@@ -581,6 +599,7 @@ const dataPromise = fetchData();
 
 map.on('load', async () => {
   LAYERS.forEach((l) => map.addImage(`icon-${l.id}`, iconImageData(l)));
+  map.addImage('icon-shelter-dim', iconImageData({ ...layerById.shelter, color: '#9e9e9e', glyph: '' }));
   map.addImage('icon-shelter-off', iconImageData({ ...layerById.shelter, color: '#767676', glyph: '休' }));
   addHazardLayers();
   try {
@@ -597,7 +616,7 @@ map.on('load', async () => {
   map.on('click', (e) => {
     const hits = map.queryRenderedFeatures(
       [[e.point.x - 10, e.point.y - 10], [e.point.x + 10, e.point.y + 10]],
-      { layers: LAYERS.map((l) => `pt-${l.id}`) });
+      { layers: [...LAYERS.map((l) => `pt-${l.id}`), DIM_LAYER] });
     if (!hits.length && !state.pin) setPin([e.lngLat.lng, e.lngLat.lat], '地図で指定した場所');
   });
 });
