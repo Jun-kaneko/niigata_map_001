@@ -143,7 +143,7 @@ function addPointLayers(collections) {
         'icon-image': l.id === 'shelter'
           ? ['case', ['get', 'unavailable'], 'icon-shelter-off', 'icon-shelter']
           : `icon-${l.id}`,
-        'icon-size': ['interpolate', ['linear'], ['zoom'], 10, 0.6 * k, 13, 0.95 * k, 16, 1.25 * k],
+        'icon-size': ['interpolate', ['linear'], ['zoom'], 10, 0.3 * k, 13, 0.48 * k, 16, 0.65 * k],
         'icon-allow-overlap': true,
         visibility: state.visible[l.id] ? 'visible' : 'none',
       },

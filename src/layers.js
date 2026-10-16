@@ -6,7 +6,7 @@ export const LAYERS = [
   { id: 'unlisted', label: '避難所・避難場所（指定緊急避難場所一覧に未収録）', short: '(A)未収録', color: '#7a4a00', shape: 'pentagon', glyph: '未', nearby: true, on: true },
   { id: 'tsunami', label: '津波避難ビル（指定緊急避難場所一覧に無いもの）', short: '津波避難ビル', color: '#0057b8', shape: 'invtriangle', glyph: '津', nearby: true, on: true },
   { id: 'water', label: '拠点給水所', short: '拠点給水所', color: '#00707a', shape: 'diamond', glyph: '水', nearby: true, on: true },
-  { id: 'aed', label: 'AED設置施設', short: 'AED', color: '#0b6e4f', shape: 'circle', glyph: 'A', nearby: true, on: true },
+  { id: 'aed', label: 'AED設置施設', short: 'AED', color: '#0b6e4f', shape: 'circle', glyph: 'A', nearby: true, on: false },
   { id: 'childcare', label: '子育て施設', short: '子育て', color: '#b34700', shape: 'hexagon', glyph: '子', nearby: true, on: true },
   { id: 'community', label: '身近な施設（公民館・コミュニティセンター等・図書館）', short: '身近な施設', color: '#33415c', shape: 'square', glyph: '公', nearby: true, on: true },
   { id: 'park', label: '公園・緑地', short: '公園', color: '#2e6b2e', shape: 'star', glyph: '園', nearby: false, on: false, minzoom: 13 },
