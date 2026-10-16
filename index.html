@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="新潟市のオープンデータで、津波・洪水など災害の種類ごとに近くの避難場所を地図で確認できます。" />
+  <meta name="referrer" content="no-referrer" />
+  <title>うちの近くマップ（新潟市）</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230b4f8a'/%3E%3Cpath d='M16 7l7 7v10H9V14z' fill='white'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <a class="skip-link" href="#search-input">検索欄へ移動</a>
+
+  <header class="site-header">
+    <h1>うちの近くマップ<span class="city">新潟市</span></h1>
+    <p class="disclaimer" role="note">
+      <strong>この地図は参考情報です。</strong>避難時は必ず新潟市の公式ハザードマップ・避難情報を確認してください。
+      <a href="https://www.city.niigata.lg.jp/kurashi/bosai/index.html" target="_blank" rel="noopener noreferrer">新潟市の防災情報（公式）</a>
+    </p>
+  </header>
+
+  <main class="app">
+    <section class="panel" aria-label="検索と絞り込み">
+      <form id="search-form" class="search" role="search">
+        <label for="search-input" class="visually-hidden">住所を入力</label>
+        <input id="search-input" type="search" inputmode="search" autocomplete="off"
+               placeholder="住所（例: 新潟市中央区西堀通6番町866）" />
+        <button type="submit" class="btn primary">検索</button>
+        <button type="button" id="locate-btn" class="btn">現在地</button>
+      </form>
+      <p class="privacy-note">
+        入力した住所は国土地理院の住所検索APIに送信されます。現在地・距離の計算は端末内だけで行い、当サイトには送信・保存しません。
+      </p>
+      <p id="search-status" class="status" role="status" aria-live="polite"></p>
+      <ul id="search-results" class="result-choices" hidden></ul>
+
+      <section class="filter" aria-labelledby="filter-title">
+        <h2 id="filter-title" class="h2">災害の種類で避難場所を絞り込む</h2>
+        <div id="chips-main" class="chips" role="group" aria-label="災害の種類（津波・洪水）"></div>
+        <details id="other-box" class="other-box">
+          <summary>他の災害</summary>
+          <div id="chips-other" class="chips" role="group" aria-label="他の災害の種類"></div>
+          <p class="note">高潮・内水氾濫・火山現象は、市の公開データに記載がありません。</p>
+        </details>
+        <p id="filter-summary" class="status" role="status" aria-live="polite"></p>
+        <details class="more-box">
+          <summary>条件の設定・浸水想定・見かた</summary>
+        <div class="filter-opts">
+          <div class="radio-list" role="radiogroup" aria-label="複数選んだときの条件">
+            <label><input type="radio" name="fmode" value="and" checked />すべてに対応</label>
+            <label><input type="radio" name="fmode" value="or" />いずれかに対応</label>
+          </div>
+          <label class="toggle"><input type="checkbox" id="inc-cond" checked />階数などの条件つきも含める</label>
+        </div>
+        
+        <div class="overlay-row">
+          <span>浸水想定を重ねる（国土地理院）:</span>
+          <label class="toggle"><input type="checkbox" id="hz-tsunami" />津波</label>
+          <label class="toggle"><input type="checkbox" id="hz-flood" />洪水</label>
+        </div>
+        <button type="button" id="howto-btn" class="btn">この表示の見かた</button>
+        </details>
+      </section>
+
+      <div class="tabs" role="tablist" aria-label="パネルの切替">
+        <button role="tab" id="tab-map" aria-selected="false" class="tab tab-map" tabindex="-1">地図</button>
+        <button role="tab" id="tab-nearby" aria-controls="view-nearby" aria-selected="true" class="tab">うちの近く</button>
+        <button role="tab" id="tab-layers" aria-controls="view-layers" aria-selected="false" class="tab" tabindex="-1">表示の切替</button>
+        <button role="tab" id="tab-about" aria-controls="view-about" aria-selected="false" class="tab" tabindex="-1">データ</button>
+      </div>
+
+      <div id="view-nearby" role="tabpanel" aria-labelledby="tab-nearby" class="view">
+        <div class="nearby-controls">
+          <label for="radius">範囲</label>
+          <select id="radius">
+            <option value="300">300m以内</option>
+            <option value="500">500m以内</option>
+            <option value="1000" selected>1km以内</option>
+            <option value="2000">2km以内</option>
+          </select>
+          <button type="button" id="center-pin-btn" class="btn">地図の中心にピンを置く</button>
+        </div>
+        <p id="nearby-summary" class="status" aria-live="polite">住所を検索するか「現在地」を押すと、近くの施設が距離順に表示されます。</p>
+        <h2 class="h2" id="nearest-title" hidden>条件に合う最も近い避難場所（直線距離）</h2>
+        <ol id="nearest-list" class="nearby-list" aria-labelledby="nearest-title"></ol>
+        <h2 class="h2" id="nearby-title" hidden>近くの施設</h2>
+        <ol id="nearby-list" class="nearby-list" aria-labelledby="nearby-title"></ol>
+      </div>
+
+      <div id="view-layers" role="tabpanel" aria-labelledby="tab-layers" class="view" hidden>
+        <h2 class="h2">施設の表示</h2>
+        <ul id="layer-toggles" class="toggle-list"></ul>
+        <h2 class="h2">国土地理院の浸水想定タイル</h2>
+        <ul id="hazard-toggles" class="toggle-list"></ul>
+        <p>
+          <a class="btn legend-btn" href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener noreferrer">凡例（色の意味）を見る（国土地理院）</a>
+        </p>
+        <p class="note">
+          色は想定される浸水の深さを表します。色が付いていない場所でも、浸水しないことを示すものではありません。新潟市の公式ハザードマップも合わせて確認してください。
+        </p>
+      </div>
+
+      <div id="view-about" role="tabpanel" aria-labelledby="tab-about" class="view" hidden>
+        <h2 class="h2">このサイトについて</h2>
+        <p class="note">
+          新潟市が公開するオープンデータと国土地理院のタイルを使い、自宅周辺の避難場所などを地図で確認できるようにした、<strong>個人作成の非公式サイト</strong>です。新潟市が運営・保証するものではありません。
+        </p>
+        <p class="note">
+          運営者: 金子純<br />
+          連絡先（ご意見・誤りのご指摘）: <a href="mailto:kanekonkon@googlemail.com">kanekonkon@googlemail.com</a>
+        </p>
+        <h2 class="h2">データの取得日と件数</h2>
+        <table class="data-table">
+          <thead><tr><th scope="col">データ</th><th scope="col">市の更新日</th><th scope="col">取得日</th><th scope="col">地図の件数</th></tr></thead>
+          <tbody id="data-table-body"></tbody>
+        </table>
+        <p class="note">座標が無い・新潟市周辺の範囲外の行は、地図に表示していません。</p>
+        <h2 class="h2">利用しているデータの出典</h2>
+        <ul id="credit-list" class="credit-list"></ul>
+        <h2 class="h2">プライバシー</h2>
+        <p class="note">
+          入力した住所・現在地は、距離計算のためこの端末のブラウザ内だけで使います。住所検索を使うと、入力した住所の文字列が国土地理院に送信されます。位置情報をログや解析に残しません。
+        </p>
+      </div>
+    </section>
+
+    <section class="map-wrap" aria-label="地図">
+      <div id="sheet-host" class="sheet-host"></div>
+      <div id="map" role="application" aria-label="新潟市の地図。ピンや施設はリストからも選べます"></div>
+      <noscript><p class="status">この地図の表示には JavaScript が必要です。</p></noscript>
+    </section>
+  </main>
+
+  <dialog id="howto" class="howto" aria-labelledby="howto-title">
+    <h2 id="howto-title">この表示の見かた</h2>
+    <div id="howto-body"></div>
+    <form method="dialog"><button class="btn primary" autofocus>閉じる</button></form>
+  </dialog>
+
+  <footer class="site-footer">
+    <p><strong>本サイトは個人が新潟市のオープンデータを加工して作成した非公式のもので、新潟市が作成・保証したものではありません。</strong>
+      運営者: 金子純／連絡先: <a href="mailto:kanekonkon@googlemail.com">kanekonkon@googlemail.com</a></p>
+    <p>
+      出典: <a href="https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/index.html" target="_blank" rel="noopener noreferrer">新潟市オープンデータ</a>（<a href="https://creativecommons.org/licenses/by/2.1/jp/" target="_blank" rel="noopener noreferrer">クリエイティブ・コモンズ・ライセンス 表示 2.1 日本</a>）・国土地理院
+    </p>
+    <details>
+      <summary>加工・出典の詳細</summary>
+      <p>
+        新潟市が公開するCSVを、地図表示用に変換・加工して掲載しています（座標のない行・範囲外の行の除外、全角数字の半角化、災害種別の値の整理、(A)と(B)の突き合わせ）。座標系は日本測地系2000（緯度・経度）と記載されており、国土地理院タイルとは市域の規模ではほぼ同一として扱っています。
+      </p>
+      <p>
+        地図: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer">地理院タイル</a>（国土地理院）／
+        浸水想定: <a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener noreferrer">ハザードマップポータルサイト</a>（洪水: 国土交通省各地方整備局等・都道府県／津波: 都道府県。国土地理院配信）／
+        住所検索: 国土地理院 住所検索API
+      </p>
+    </details>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

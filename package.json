@@ -1,0 +1,21 @@
+{
+  "name": "niigata-uchinochika-map",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "新潟市オープンデータを使った市民向け地図ツール「うちの近くマップ（新潟市版）」",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "fetch": "python3 scripts/fetch.py",
+    "data": "python3 scripts/convert.py",
+    "test": "python3 -m unittest discover -s scripts/tests"
+  },
+  "dependencies": {
+    "maplibre-gl": "^5.0.0"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
+}

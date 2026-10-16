@@ -1,0 +1,64 @@
+name: オープンデータ更新
+
+# 週1回、新潟市のCSVを再取得して GeoJSON を再生成し、差分があれば PR を作る
+# 列名や災害種別の値の種類が変わった場合は convert.py が失敗し、PR は作らず Issue で通知する
+on:
+  schedule:
+    - cron: '0 20 * * 0' # 毎週月曜 5:00 (JST)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # 取得に失敗したファイルは既存のまま残る（scripts/fetch.py の仕様）
+      - name: CSV を取得
+        id: fetch
+        continue-on-error: true
+        run: python3 scripts/fetch.py
+
+      - name: GeoJSON を再生成（列名・値の変化があれば失敗）
+        id: convert
+        continue-on-error: true
+        run: python3 scripts/convert.py
+
+      - name: テスト
+        id: test
+        if: steps.convert.outcome == 'success'
+        continue-on-error: true
+        run: python3 -m unittest discover -s scripts/tests
+
+      - name: 差分があれば PR を作成
+        if: steps.convert.outcome == 'success' && steps.test.outcome == 'success'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: bot/update-open-data
+          delete-branch: true
+          commit-message: 'データ更新: 新潟市オープンデータを再取得'
+          title: 'データ更新: 新潟市オープンデータ'
+          body: |
+            週次の自動更新です。`data/raw/`・`public/data/`・`docs/convert-log.md` の差分を確認してから取り込んでください。
+          add-paths: |
+            data/raw/**
+            public/data/**
+            docs/convert-log.md
+
+      - name: 失敗を Issue で通知
+        if: steps.fetch.outcome == 'failure' || steps.convert.outcome == 'failure' || steps.test.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "オープンデータの更新に失敗しました ($(date -u +%F))" \
+            --body "取得: ${{ steps.fetch.outcome }} / 変換: ${{ steps.convert.outcome }} / テスト: ${{ steps.test.outcome }}。列名や災害種別の値が変わった可能性があります。既存データはそのまま残しています。ログ: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          exit 1

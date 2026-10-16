@@ -1,0 +1,98 @@
+{
+  "aed.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "d12ded0e399066e270e410c302e0a274859e440bf3fbbbb1b01f06cdda2846b6",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kenkofukushi/od-gis_aed.files/od_gis_10061_aed.csv"
+  },
+  "community.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "040f19c66fb1d6ed2a6a6537817a7e747085103cde3572414f1daa37b56bbd79",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kosodate/od-gis_community.files/od_gis_10052_communitycenter.csv"
+  },
+  "communitycent.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "406afb4ba0d6cbf58300433d816fc204ca5039f9fbb6b343fac200cbc54ba7e9",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kosodate/od-gis_communitycent.files/od_gis_10054_communitycenter_etc.csv"
+  },
+  "evacuation_space.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2026-09-25",
+    "sha256": "0d0849de62eeb7b08a791a9747326ebb07464d22c378ba460c219f0f9a974ac8",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/index.files/151009_evacuation_space.csv"
+  },
+  "hoikuen.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "2fb7a635a35be85c888ece3a870dedb7fc5852dff88096a9589f08f4b3aefff0",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kenkofukushi/od-gis_hoikuen.files/od_gis_10031_hoikuen.csv"
+  },
+  "hoikujigyosho.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "44e438b527ca218e0faa4d8433d1d92cde0452bc39e12b585489cc7905de2a69",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kenkofukushi/od-gis_hoikujigyosho.files/od_gis_10044_hoikujigyosho.csv"
+  },
+  "jidocenter.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "f1a27f60079b3e9c94f4aaf85c8eeeced427d9f426c1d3fad8832adfc09a4f0c",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kosodate/od-gis_jidocenter.files/od_gis_10042_jidocenter.csv"
+  },
+  "jidoclub.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "17058f988f8904b0d7800150c4e2b37720706c88bc85bc9e6279e6f450c377d7",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kosodate/od-gis_jidoclub.files/od_gis_10041_jidoclub.csv"
+  },
+  "kodomoen.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "7a6f0f9041462fb7eac2b586313c20d90caa97c5ec9daecbbbd618d107ea62dd",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kenkofukushi/od-gis_kodomoen.files/od_gis_10043_kodomoen.csv"
+  },
+  "kyotenkyusui.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2026-04-01",
+    "sha256": "1600d7fcbf73b746c1b93ab3b95d992222738447024d34c1517f2b9825800d3f",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_dourosuido/od-gis_kyotenkyusui.files/20250306_kyotenkyusui.csv"
+  },
+  "library.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "d2c2ed11df8dcc932d35f707105b29cd72e48e4e0192ffd688eba5cd9ee19249",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kosodate/od-gis_library.files/od_gis_10051_library.csv"
+  },
+  "okugaihinan.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "69e4f3b8371624c7e6e5f0ed8df038be30d1acc236d5afa384d8364b0f45a7f4",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kurashibosai/od-gis_okugaihinan.files/od_gis_10162_okugaihinanbasho.csv"
+  },
+  "okunaihinanjo.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "ff8420c3119f9835a832e4c0a816e08aa40bda4d0f0f856f01276b0fd6b96703",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kurashibosai/od-gis_okunaihinanjo.files/od_gis_10161_okunaihinanjo.csv"
+  },
+  "park.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "5f97356c920dce15c053c160f12a7c65b56d7bfbcb718d9cfedd2795374defe2",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kurashibosai/od-gis_park.files/od_gis_10019_park.csv"
+  },
+  "tsunamihinan.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "a6481f5395d83efa285e7507380a82e14392ad0830488487d6fac325a1bfe69b",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kurashibosai/od-gis_tsunamihinan.files/od_gis_10171_tsunamihinan.csv"
+  },
+  "yochien.csv": {
+    "fetchedAt": "2026-10-16",
+    "pageUpdated": "2022-04-01",
+    "sha256": "e4d793b003711e00cb23c118c2063eb4db4c0836a71056983d3e0d1fe2566d0f",
+    "url": "https://www.city.niigata.lg.jp/shisei/seisaku/it/open-data/opendata-gis/od-gis_kosodate/od-gis_yochien.files/od_gis_10032_yochien.csv"
+  }
+}
