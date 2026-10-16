@@ -612,6 +612,11 @@ dataPromise.then(() => {
   placeSheets();
   mobileMq.addEventListener('change', placeSheets);
   $('howto-btn').addEventListener('click', () => $('howto').showModal());
+  document.querySelectorAll('.close-btn').forEach((b) => b.addEventListener('click', () => {
+    const d = b.closest('details');
+    d.open = false;
+    d.querySelector('summary').focus();
+  }));
   onFilterChanged();
 }).catch((e) => {
   $('search-status').textContent = `データの読み込みに失敗しました（${e.message}）。再読み込みしてください。`;

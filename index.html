@@ -38,13 +38,14 @@
         <h2 id="filter-title" class="h2">災害の種類で避難場所を絞り込む</h2>
         <div id="chips-main" class="chips" role="group" aria-label="災害の種類（津波・洪水）"></div>
         <details id="other-box" class="other-box">
-          <summary>他の災害</summary>
+          <summary><span class="sum-closed">他の災害を開く ▼</span><span class="sum-open">他の災害を閉じる ▲</span></summary>
           <div id="chips-other" class="chips" role="group" aria-label="他の災害の種類"></div>
           <p class="note">高潮・内水氾濫・火山現象は、市の公開データに記載がありません。</p>
+          <button type="button" class="btn close-btn">閉じる ▲</button>
         </details>
         <p id="filter-summary" class="status" role="status" aria-live="polite"></p>
         <details class="more-box">
-          <summary>条件の設定・浸水想定・見かた</summary>
+          <summary><span class="sum-closed">条件の設定・浸水想定・見かたを開く ▼</span><span class="sum-open">条件の設定などを閉じる ▲</span></summary>
         <div class="filter-opts">
           <div class="radio-list" role="radiogroup" aria-label="複数選んだときの条件">
             <label><input type="radio" name="fmode" value="and" checked />すべてに対応</label>
@@ -59,6 +60,7 @@
           <label class="toggle"><input type="checkbox" id="hz-flood" />洪水</label>
         </div>
         <button type="button" id="howto-btn" class="btn">この表示の見かた</button>
+          <button type="button" class="btn close-btn">閉じる ▲</button>
         </details>
       </section>
 

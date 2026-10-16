@@ -260,3 +260,19 @@ a { color: var(--accent); }
   .chip { font-size: 1.05rem; }
   .other-box summary, .more-box summary { min-height: 40px; font-size: 0.9rem; }
 }
+
+/* 開閉ボタンをはっきりしたボタンの見た目にする */
+.other-box summary::after, .more-box summary::after, .other-box[open] summary::after, .more-box[open] summary::after { content: none; }
+.other-box summary, .more-box summary {
+  list-style: none; padding: 6px 12px; border: 2px solid var(--accent); border-radius: 8px; background: #fff;
+  font-size: 0.95rem;
+}
+.other-box summary::-webkit-details-marker, .more-box summary::-webkit-details-marker { display: none; }
+.sum-open, .other-box[open] .sum-closed, .more-box[open] .sum-closed { display: none; }
+.other-box[open] .sum-open, .more-box[open] .sum-open { display: inline; }
+.other-box[open] summary, .more-box[open] summary { background: var(--accent); color: #fff; }
+.close-btn { display: block; width: 100%; margin-top: 8px; }
+.other-box[open] .chips, .more-box[open] .filter-opts { margin-top: 8px; }
+/* 津波・洪水のチップをコンパクトに */
+.chip { min-height: 40px; padding: 2px 14px; font-size: 1rem; border-width: 2px; }
+.chips { gap: 6px; }
